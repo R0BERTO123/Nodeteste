@@ -4,41 +4,76 @@ const servidor =express()
 
 servidor.use (express.json());
 
-servidor.get("/vai",(req,resp)=>{
+
+servidor.post("/treino/leituraLivro",(req,resp)=>{
+    let paginaslidas = req.body.paginas;
+    let tempo = req.body.tempoPorPagina;
+
+    let total = paginaslidas * tempo;
+    let horas = total / 3600;
+
+    resp.send({
+        tempoLeitura: horas
+    })
+})
+
+servidor.get("/treino/combinacaoCores/:cor1/:cor2",(req,resp)=>{
+    let pcor =req.params.cor1
+    let scor =req.params.cor2
+
+    if(pcor=="azul"&&scor=="vermelho"){
+
+        resp.send({ 
+            corResultante:"roxo"
+        })
+
+  }
 
     
-    resp.send({mensagen:'ola mundo'})
 })
 
-servidor.get("/vai/merda",(req,resp)=>{
-    resp.send("boaa lenda")
+servidor.post("/treino/cinema/validacao",(req,resp)=>{
+    let pessoa1 =Number(req.body.idadePessoa1)
+    let pessoa2 =Number(req.body.idadePessoa2)
+    let classificaçaofilme =Number(req.body.classificaçao)
+
+    if (pessoa1>=classificaçaofilme && pessoa2>=classificaçaofilme){
+
+        resp.send({
+            podeAssistir: true
+        })
+       
+    }
+    else {
+        resp.send({
+            podeAssistir: false
+        })
+    }
+
+
+   
+ 
+  
 })
 
-servidor.get("/vai/soma/:n1/:n2",(req,resp)=>{
-   let n1 =Number( req.params.n1);
-   let n2 =Number(req.params.n2);
-   let soma = n1+n2;
-    resp.send("a soma e " + soma);
+servidor.get("/treino/tabuada/:n1",(req,resp)=>{
+   let zero = 0;
+   let numero = Number(req.params.n1);
+   let array =[];
+
+   for(let i =0; i<=10;i++){
+
+    let multiplica = numero * zero;
+    zero++;
+    array[i]=multiplica
+   }
+
+   resp.send(console.log(array))
+   
 })
 
-servidor.get("/vai/soma2",(req,resp)=>{
-    let n1 =Number( req.query.n1);
-    let n2 =Number(req.query.n2);
-    let soma = n1+n2;
-     resp.send("a soma e " + soma);
-}) 
 
-servidor.get("/vai/tomando",(req,resp)=>{
-    let fulano= req.query.nome ?? "?????";
-    resp.send("salve "+fulano);
-})
 
-servidor.post("/vai/tomando/nota",(req,resp)=>{
-    let n1= req.body.nota1;
-    let n2= req.body.nota2;
-    let n3= req.body.nota3;
-    let media = (n1+n2+n3)/3
-    resp.send("a media e "+media)
-})
+
 
 servidor.listen(5001,()=>console.log("foi?"))
